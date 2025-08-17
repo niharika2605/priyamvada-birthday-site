@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phil's-osophy Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* A light, friendly blue-gray */
+        }
+        .font-typewriter {
+            font-family: 'Special Elite', cursive;
+        }
+        /* The 'book page' container for the quote */
+        .book-page {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        /* A little detail to make it look like a book */
+        .book-page::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(to right, #e5e5e5, #fff);
+        }
+        #quote-text {
+            transition: opacity 0.4s ease-in-out;
+        }
+        .quote-fade-out {
+            opacity: 0;
+        }
+        .generate-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .generate-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+        <!-- Header Navigation -->
+        <header class="p-4 sm:p-6">
+            <nav class="container mx-auto flex justify-between items-center">
+                <div class="text-xl font-bold tracking-wider text-gray-700">
+                    <a href="#" class="hover:text-blue-600 transition-colors">P's B-Day</a>
+                </div>
+                <ul class="flex space-x-4 sm:space-x-8 text-sm sm:text-base text-gray-600 font-semibold">
+                    <li><a href="index.html" class="hover:text-blue-600 transition-colors">Home</a></li>
+                    <li><a href="wishes.html" class="hover:text-blue-600 transition-colors">Wishes</a></li>
+                    <li><a href="pitwall.html" class="hover:text-blue-600 transition-colors">Pitwall</a></li>
+                    <li><a href="#" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-1">Phil's-osophy</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center text-center">
+            <div class="w-full max-w-2xl">
+                <img src="p.jpg" alt="Phil's-osophy Logo" class="w-48 mx-auto mb-4">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8">A Book of Wisdom for Priyamvada</h1>
+
+                <!-- Quote Display Area -->
+                <div class="book-page p-8 rounded-lg min-h-[200px] flex items-center justify-center mb-8">
+                    <p id="quote-text" class="font-typewriter text-2xl md:text-3xl leading-relaxed"></p>
+                </div>
+
+                <!-- Generate Button -->
+                <button id="generate-btn" class="generate-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-full text-lg uppercase">
+                    Generate Wisdom
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ADD YOUR PERSONALIZED PHIL'S-OSOPHY QUOTES HERE ---
+            const quotes = [
+                "The key to a great birthday is to peer-pressure the cake into being delicious. Happy Birthday, Priyamvada!",
+                "Always be yourself. Unless you can be Priyamvada on her birthday. Then definitely be that.",
+                "When life gives you lemonade, make lemons. Life will be all like, 'Whaaat?!' Hope your birthday is full of surprises!",
+                "Success is 1% inspiration, 98% perspiration, and 2% attention to detail. You've got all three down!",
+                "Watch a sunrise at least once a day. Or, you know, just have an amazing birthday. That works too.",
+                "You can tell a lot about a person by their biography. Yours is a bestseller waiting to happen. Happy Birthday!",
+                "Never be afraid to reach for the stars. Because even if you miss, you'll land on a really comfortable couch. Wishing you a comfy and stellar year!",
+                "The most amazing things that can happen to a human being will happen to you if you just lower your expectations. Just kidding, aim high! Happy Birthday!"
+            ];
+            // --- END OF EDITABLE CONTENT ---
+
+            const quoteText = document.getElementById('quote-text');
+            const generateBtn = document.getElementById('generate-btn');
+            
+            let lastQuoteIndex = -1;
+
+            function generateQuote() {
+                let newQuoteIndex;
+                
+                // Ensure the new quote is different from the last one
+                do {
+                    newQuoteIndex = Math.floor(Math.random() * quotes.length);
+                } while (quotes.length > 1 && newQuoteIndex === lastQuoteIndex);
+                
+                lastQuoteIndex = newQuoteIndex;
+                const newQuote = quotes[newQuoteIndex];
+
+                // Fade out the old quote
+                quoteText.classList.add('quote-fade-out');
+
+                // After the fade out, change the text and fade it back in
+                setTimeout(() => {
+                    quoteText.textContent = newQuote;
+                    quoteText.classList.remove('quote-fade-out');
+                }, 400); // This should match the CSS transition duration
+            }
+
+            // Generate the first quote on page load
+            generateQuote();
+
+            // Add click event listener to the button
+            generateBtn.addEventListener('click', generateQuote);
+        });
+    </script>
+</body>
+</html>

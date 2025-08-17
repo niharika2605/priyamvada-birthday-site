@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pit Wall Messages</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+        }
+        /* Main screen container with grid background */
+        .pitwall-screen {
+            background-color: #111;
+            background-image: 
+                linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border: 2px solid #ef4444; /* red-500 */
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+        }
+        /* Scanline effect for that retro monitor feel */
+        .pitwall-screen::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+            background-size: 100% 4px;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanline {
+            from { background-position: 0 0; }
+            to { background-position: 0 -40px; }
+        }
+        /* Styling for the message feed */
+        #message-feed {
+            height: 400px;
+            overflow-y: auto;
+        }
+        /* Custom scrollbar */
+        #message-feed::-webkit-scrollbar {
+            width: 8px;
+        }
+        #message-feed::-webkit-scrollbar-track {
+            background: #222;
+        }
+        #message-feed::-webkit-scrollbar-thumb {
+            background-color: #ef4444;
+            border-radius: 4px;
+        }
+        .message-line {
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        /* Input styling */
+        .form-input {
+            background-color: rgba(0,0,0,0.5);
+            border: 1px solid #444;
+            color: #e5e5e5;
+            transition: all 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+        <!-- Header Navigation -->
+        <header class="p-4 sm:p-6">
+            <nav class="container mx-auto flex justify-between items-center">
+                <div class="text-xl font-bold tracking-wider">
+                    <a href="#" class="hover:text-red-500 transition-colors">P's B-Day</a>
+                </div>
+                <ul class="flex space-x-4 sm:space-x-8 text-sm sm:text-base">
+                    <li><a href="index.html" class="hover:text-red-500 transition-colors">Home</a></li>
+                    <li><a href="phil's-osophy.html" class="hover:text-red-500 transition-colors">Phil's-osophy </a></li>
+                    <li><a href="wishes.html" class="hover:text-red-500 transition-colors">Wishes</a></li>
+                    <li><a href="#" class="font-bold text-white border-b-2 border-red-500 pb-1">Pit Wall</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Pit Wall Section -->
+        <main class="flex-grow container mx-auto px-4 py-8 flex items-center justify-center">
+            <div class="pitwall-screen relative w-full max-w-4xl p-4 sm:p-6 rounded-lg">
+                <!-- Screen Header -->
+                <div class="flex justify-between items-center border-b-2 border-red-500 pb-2 mb-4">
+                    <h1 class="text-xl sm:text-2xl font-bold text-red-500">INCOMING TRANSMISSIONS</h1>
+                    <div class="text-sm text-green-400 animate-pulse">● LIVE</div>
+                </div>
+
+                <!-- Message Feed -->
+                <div id="message-feed" class="space-y-2 pr-2">
+                    
+                </div>
+
+                <!-- Message Input Form -->
+                <div class="mt-4 pt-4 border-t-2 border-red-500">
+                    <form id="message-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <div class="md:col-span-1">
+                            <label for="from-input" class="text-sm font-bold text-gray-400">FROM:</label>
+                            <input type="text" id="from-input" class="form-input w-full p-2 mt-1 rounded" placeholder="Your Name" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="message-input" class="text-sm font-bold text-gray-400">MESSAGE:</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="message-input" class="form-input w-full p-2 mt-1 rounded" placeholder="Type your birthday wish..." required>
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold p-2 mt-1 rounded transition-colors">SEND</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          
+            const initialMessages = [
+                { from: "Race Control", message: "BIRTHDAY SESSION IS GREEN, GREEN, GREEN. HAVE A GOOD ONE!" },
+                { from: "Aditi", message: "Box, box, box for cake and presents! Hope it's a P1 day!" },
+                { from: "Tavishi", message: "Okay, you have a clear track ahead for another amazing year. Push, push!" },
+                { from: "Janhvi", message: "You're the undisputed world champion of friendship! Happy Birthday!" },
+                { from: "vainavi", message: "No penalties detected for being awesome. Keep it up! Happy Birthday, Priyamvada!" },
+            ];
+           
+            const messageFeed = document.getElementById('message-feed');
+            const messageForm = document.getElementById('message-form');
+            const fromInput = document.getElementById('from-input');
+            const messageInput = document.getElementById('message-input');
+
+            // Function to add a message to the feed with a typing effect
+            function addMessage(from, message, isNew = false) {
+                const messageLine = document.createElement('div');
+                messageLine.className = 'message-line';
+                
+                const fromSpan = `<span class="text-green-400">${from.toUpperCase()}</span>`;
+                const toSpan = `<span class="text-gray-500">TO: PRIYAMVADA >></span>`;
+                const messageSpan = `<span class="text-white">"${message.toUpperCase()}"</span>`;
+                
+                const fullMessage = `${fromSpan} ${toSpan} ${messageSpan}`;
+                
+                if (isNew) {
+                    // Typing effect for new messages
+                    let i = 0;
+                    messageLine.innerHTML = `${fromSpan} ${toSpan} "`;
+                    messageFeed.prepend(messageLine);
+                    messageFeed.scrollTop = 0; // Scroll to top to see new message
+                    
+                    const typingInterval = setInterval(() => {
+                        if (i < message.length) {
+                            messageLine.innerHTML += message.toUpperCase().charAt(i);
+                            i++;
+                        } else {
+                            messageLine.innerHTML += '"';
+                            clearInterval(typingInterval);
+                        }
+                    }, 30);
+                } else {
+                    // Just render initial messages
+                    messageLine.innerHTML = fullMessage;
+                    messageFeed.appendChild(messageLine);
+                }
+            }
+
+            // Load initial messages
+            initialMessages.forEach(msg => addMessage(msg.from, msg.message));
+
+            // Handle form submission
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const from = fromInput.value.trim();
+                const message = messageInput.value.trim();
+                
+                if (from && message) {
+                    addMessage(from, message, true);
+                    
+                    // Clear the form
+                    fromInput.value = '';
+                    messageInput.value = '';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishes from the Paddock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+        }
+        .font-fancy {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Animated confetti background */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        /* Mouse-following glow effect */
+        #glow-cursor {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.2) 0%, rgba(220, 38, 38, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            z-index: -1;
+        }
+        /* Friend card styling */
+        .friend-card {
+            background-color: rgba(20, 20, 20, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            transition: all 0.4s ease;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        .friend-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .friend-card:hover {
+            border-color: rgba(239, 68, 68, 0.7);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+            transform: translateY(-5px);
+        }
+        /* Custom scrollbar */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #111;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #ef4444;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <canvas id="confetti-canvas"></canvas>
+    <div id="glow-cursor"></div>
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+        <!-- Header Navigation -->
+        <header class="p-4 sm:p-6">
+            <nav class="container mx-auto flex justify-between items-center">
+                <div class="text-xl font-bold tracking-wider">
+                    <a href="#" class="hover:text-red-500 transition-colors">P's B-Day</a>
+                </div>
+                <ul class="flex space-x-4 sm:space-x-8 text-sm sm:text-base">
+                    <li><a href="index.html" class="hover:text-red-500 transition-colors">Home</a></li>
+                    <li><a href="phil's-osophy.html" class="hover:text-red-500 transition-colors">Phil's-osophy</a></li>
+                    <li><a href="pitwall.html" class="hover:text-red-500 transition-colors">Pitwall</a></li>
+                    <li><a href="#" class="font-bold text-white border-b-2 border-red-500 pb-1">Wishes</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="text-center mb-12">
+                <h1 class="font-fancy text-4xl md:text-5xl font-bold text-red-500">Wishes from the Paddock</h1>
+                <p class="text-gray-400 mt-2">Messages from your amazing pit crew!</p>
+            </div>
+
+            <!-- Friends Grid -->
+            <div id="friends-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Friend cards will be injected here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ADD YOUR FRIENDS' INFO HERE ---
+            const friendsData = [
+                {
+                    name: "Vainavi",
+                    image: "pri with vainavi.jpeg",
+                    wish: "Happiesttt 18th, my vadapav 🫦💋🥹. Ilysm moreee than you could ever imagineeee! Finally 18 yaaaarrrr!!!  Doesn't mean teri ragging bandh 😃 hamesha rahogi beta humare liye tum bachhi 😏Also, SO DAMN PROUD OF YOU TODAY AND EVERYDAY, BBG 💗gymming w you will forever be a core memory for me 🤌Love you, meri candle 💋"
+
+                },
+                {
+                    name: "Janhvi",
+                    image: "pri with janhvi.jpeg",
+                    wish: "Another year, another reason to celebrate how lucky I am to have you as my person🫶🏼 our friendship is honestly my best gift. Thanku for always being there and just know you are the best! Ilysm💋"
+                },
+                {
+                    name: "Aditi",
+                    image: "pri with aditi.jpeg",
+                    wish: "Happiest Birthday to my dumbo pandaa ❤️ From those crazy 1st class bachpan wali holis to every silly laugh we’ve shared, you’ve been the purest part of my life’s memories. I don’t even need to say how much you mean, because you already know i love you smmm✨"
+                },
+                {
+                    name: "Tavishi",
+                    image: "pri with tavishi.jpeg",
+                    wish: " happy birthday, meri jaan! can't ever imagine myself without you. loveyou so much!"
+                },
+                {
+                    name: "Niharika",
+                    wish: "happy happy birthday to you priyamvadaaa. Can never have a friend like you and I can always count on you(even though you are my youngest friend), happy birthday!!!"
+                },
+                {
+                    name: "Bhoomi",
+                    image: "pri with bhoomi.jpeg",
+                    wish: "Happiest Birthday Priyamvadaaa 🎂❤️ May God keep showering endless blessings on you always. I truly feel so lucky to have you in my life. We may have met as mutuals but now you completely own my heart 💪🏻 (credit goes to saty ki devi again ) Thank you for being you!! Love you bohot saaraaa meri jaan"
+                },
+                {
+                    name: "Khushi",
+                    image: "pri with khushi .jpeg",
+                    wish: "Happpy Birthdayyy Priyammmvadaaaa tum jiyo hazaro laakhoo saal lekin ye yaad rkhna ki 2026 me to duniya khtm h💗🫵🏻😤 Enjoy your day💋💋"
+                },
+                {
+                    name: "Shikha",
+                    image: "pri with shikha.jpeg",
+                    wish: "Happpy Birthdayyy Priyammmvadaaaa tum jiyo hazaro laakhoo saal lekin ye yaad rkhna ki 2026 me to duniya khtm h💗🫵🏻😤 Enjoy your day💋💋"
+                }
+
+            ];
+            // --- END OF EDITABLE CONTENT ---
+
+            const friendsGrid = document.getElementById('friends-grid');
+
+            // Dynamically create and add friend cards to the grid
+            friendsData.forEach(friend => {
+                const card = document.createElement('div');
+                card.className = 'friend-card p-8 flex flex-col items-center text-center';
+                card.innerHTML = `
+                    <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-gray-700 mb-6">
+                        <img src="${friend.image}" alt="${friend.name}" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-3xl font-bold text-white">${friend.name}</h3>
+                    <p class="text-gray-300 mt-4 text-base">"${friend.wish}"</p>
+                `;
+                friendsGrid.appendChild(card);
+            });
+
+            // Scroll animation for the cards
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.friend-card').forEach(card => {
+                observer.observe(card);
+            });
+
+            // Mouse-following glow effect
+            const glowCursor = document.getElementById('glow-cursor');
+            document.addEventListener('mousemove', (e) => {
+                glowCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            });
+
+            // Confetti background effect
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            const colors = ['#dc2626', '#ef4444', '#f87171', '#fca5a5', '#ffffff'];
+
+            function createParticle() {
+                const x = Math.random() * canvas.width;
+                const y = -20;
+                const size = Math.random() * 8 + 4;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const speed = Math.random() * 2 + 1;
+                const spin = Math.random() - 0.5;
+                particles.push({ x, y, size, color, speed, spin, angle: 0 });
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, index) => {
+                    p.y += p.speed;
+                    p.x += Math.sin(p.angle);
+                    p.angle += p.spin * 0.1;
+
+                    if (p.y > canvas.height) {
+                        particles.splice(index, 1);
+                    } else {
+                        ctx.fillStyle = p.color;
+                        ctx.globalAlpha = (canvas.height - p.y) / canvas.height;
+                        ctx.beginPath();
+                        ctx.rect(p.x, p.y, p.size, p.size);
+                        ctx.fill();
+                    }
+                });
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animateParticles);
+            }
+
+            setInterval(createParticle, 150);
+            animateParticles();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        });
+    </script>
+</body>
+</html>
